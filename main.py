@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from BaseModel import Bet, Win
+from Base_Model import Bet, Win, Rollback
 
 app = FastAPI()
 
@@ -38,5 +38,24 @@ def win_game(win: Win):
     return {"player": win.player, "balance": player_balances[win.player], "txn": txn_id}
 
 @app.post("/rollback")
-def rollback_transaction():
-    return {"teste testando"}
+def rollback_transaction(rollback: Rollback):
+    player_id = rollback.player
+    txn_id = rollback.txn
+    rollback_value = rollback.value
+    txn_id = len(transactions) + 1
+    transactions[txn_id] = {"player": rollback.player, "value": rollback.value}
+    print("transactions:", transactions)
+    print("txn_id:", txn_id)
+
+
+    if txn_id not in transactions:
+        raise HTTPException(status_code=404, detail="Transação não encontrada")
+
+    transaction_data = transactions[txn_id]
+    if transaction_data["player"] != player_id:
+        raise HTTPException(status_code=400, detail="ID do jogador não corresponde à transação")
+
+    player_balances[player_id] += rollback_value
+    del transactions[txn_id]
+
+    return {"code": "OK", "balance": player_balances[player_id]}
