@@ -51,3 +51,7 @@ def win_game(win: Win):
     player_balances[win.player] += win.value
 
     return {"player": win.player, "balance": player_balances[win.player], "txn": txn_id}
+
+@app.post("/rollback")
+def rollback_transaction():
+    return {"teste testando"}
