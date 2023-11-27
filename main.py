@@ -1,25 +1,10 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from BaseModel import Bet, Win
 
 app = FastAPI()
 
 player_balances = {}
 transactions = {}
-
-class Bet(BaseModel):
-    player: int
-    value: float
-
-
-class Win(BaseModel):
-    player: int
-    value: float
-
-
-class Rollback(BaseModel):
-    player: int
-    txn: int
-    value: float
 
 ##########################-REQUISIÇÕES-##############################################
 
