@@ -18,5 +18,12 @@ class Win(BaseModel):
 
 class Rollback(BaseModel):
     player: int
-    id_txn: int
+    txn: int
     value: float
+
+##########################-REQUISIÇÕES-##############################################
+
+@app.get("/balance")
+def get_balance(player: int):
+    balance = player_balances.get(player, 1000)
+    return {"player": player, "balance": balance}
