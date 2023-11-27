@@ -3,6 +3,8 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+player_balances = {}
+transactions = {}
 
 class Bet(BaseModel):
     player: int
@@ -16,5 +18,5 @@ class Win(BaseModel):
 
 class Rollback(BaseModel):
     player: int
-    txn: int
+    id_txn: int
     value: float
