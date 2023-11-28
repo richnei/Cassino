@@ -13,6 +13,7 @@ def get_balance(player: int):
     balance = player_balances.get(player, 1000)
     return {"player": player, "balance": balance}
 
+
 @app.post("/bet")
 def place_bet(bet: Bet):
     if bet.player not in player_balances:
@@ -24,6 +25,7 @@ def place_bet(bet: Bet):
     transactions[txn_id] = {"player": bet.player, "value": -bet.value}
     
     return {"player": bet.player, "balance": player_balances[bet.player], "txn": txn_id}
+
 
 @app.post("/win")
 def win_game(win: Win):
@@ -37,25 +39,9 @@ def win_game(win: Win):
 
     return {"player": win.player, "balance": player_balances[win.player], "txn": txn_id}
 
-@app.post("/rollback")
-def rollback_transaction(rollback: Rollback):
-    player_id = rollback.player
-    txn_id = rollback.txn
-    rollback_value = rollback.value
-    txn_id = len(transactions) + 1
-    transactions[txn_id] = {"player": rollback.player, "value": rollback.value}
-    print("transactions:", transactions)
-    print("txn_id:", txn_id)
 
+if __name__ == "__main__":
+    import uvicorn
 
-    if txn_id not in transactions:
-        raise HTTPException(status_code=404, detail="Transação não encontrada")
+    uvicorn.run(app, host="localhost", port=8000)
 
-    transaction_data = transactions[txn_id]
-    if transaction_data["player"] != player_id:
-        raise HTTPException(status_code=400, detail="ID do jogador não corresponde à transação")
-
-    player_balances[player_id] += rollback_value
-    del transactions[txn_id]
-
-    return {"code": "OK", "balance": player_balances[player_id]}
