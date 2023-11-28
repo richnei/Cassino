@@ -7,8 +7,3 @@ class Bet(BaseModel):
 class Win(BaseModel):
     player: int
     value: float
-
-class Rollback(BaseModel):
-    player: int
-    txn: int
-    value: float
