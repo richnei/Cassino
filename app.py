@@ -7,7 +7,6 @@ app = FastAPI()
 player_balances = {}
 transactions = {}
 
-
 class GameState:
     def __init__(self):
         self.player_balances: Dict[int, float] = {}
